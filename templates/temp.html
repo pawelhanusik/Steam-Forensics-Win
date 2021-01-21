@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+	#menu {
+		
+	}
+	#menu * {
+		display: block;
+	}
+	
+	table {
+		border-collapse: collapse;
+	}
+	td, th {
+		border: 1px solid #dddddd;
+		text-align: center;
+		padding: 8px 12px;
+	}
+	tr:nth-child(even) {
+	  background-color: #dddddd;
+	}
+	table .colFitContents {
+		width: 1%;
+		white-space: nowrap;
+	}
+</style>
+<title>Analiza Steam - Windows</title>
+</head>
+<body>
+	<h1>Menu</h1>
+	<div id="menu">
+		<a href="#useraccounts">User accounts</a>
+		<a href="#localconfig">Local config</a>
+		<a href="#friends">Friends</a>
+		<a href="#games">Games</a>
+	</div>
+	<hr>
+	<br>
+	
+	<div id="useraccounts">
+		<h1>User accounts</h1>
+		{% for x in useraccounts %}
+		{% if useraccounts|length > 1 %}
+		<h4>User {{ x }}</h4>
+		{% endif %}
+		<table>
+			{% for y in useraccounts[x] %}
+			<tr><td>{{ y }}</td><td>{{ useraccounts[x][y] }}</td></tr>
+			{% endfor %}
+		</table>
+		<hr>
+		{% endfor %}
+	</div>
+	
+	<div id="localconfig">
+		{% for x in localconfig %}
+		{% if localconfig|length > 1 %}
+		<h1>Local config of {{ x }}</h1>
+		{% else %}
+		<h1>Local config</h1>
+		{% endif %}
+		<table>
+			{% for y in localconfig[x] %}
+			<tr><td>{{ y }}</td><td>{{ localconfig[x][y] }}</td></tr>
+			{% endfor %}
+		</table>
+		<hr>
+		{% endfor %}
+	</div>
+	
+	<div id="friends">
+		{% for x in friends %}
+		{% if friends|length > 1 %}
+		<h1>Friends of {{ x }}</h1>
+		{% else %}
+		<h1>Friends</h1>
+		{% endif %}
+		<table>
+			<tr>
+				<th>UID</th>
+				<th>Name</th>
+				<th>Tag</th>
+				<th>Avatar</th>
+			</tr>
+			{% for y in friends[x] %}
+			<tr>
+				<td>{{ friends[x][y]['UID'] }}</td>
+				<td>{{ friends[x][y]['name'] }}</td>
+				<td>{{ friends[x][y]['tag'] }}</td>
+				<td>{{ friends[x][y]['avatar'] }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+		<hr>
+		{% endfor %}
+	</div>
+	
+	<div id="games">
+		{% for x in games %}
+		{% if games|length > 1 %}
+		<h1>Games of {{ x }}</h1>
+		{% else %}
+		<h1>Games</h1>
+		{% endif %}
+		<table>
+			<tr>
+				<th class=".colFitContents">GameID</th>
+				<th class=".colFitContents">Last played</th>
+				<th class=".colFitContents">Playtime</th>
+			</tr>
+			{% for y in games[x] %}
+			<tr>
+				<td>{{ games[x][y]['GameID'] }}</td>
+				<td>{{ games[x][y]['LastPlayed'] }}</td>
+				<td>{{ games[x][y]['Playtime'] }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+		<hr>
+		{% endfor %}
+	</div>
+
+	
+</body>
+</html>
