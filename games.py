@@ -12,7 +12,10 @@ def run():
     uids = os.listdir(userdata_path)
     
     #Ask
-    tmp_fetchGameNames = input('Fetch game names from the internet? [y/N] (default: no) ')
+    try:
+        tmp_fetchGameNames = input('Fetch game names from the internet? [y/N] (default: no) ')
+    except KeyboardInterrupt:
+        exit()
     if tmp_fetchGameNames == 'y' or tmp_fetchGameNames == 'Y':
         fetchGameNames = True
     #End asking

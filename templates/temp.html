@@ -21,10 +21,6 @@
 	tr:nth-child(even) {
 	  background-color: #dddddd;
 	}
-	table .colFitContents {
-		width: 1%;
-		white-space: nowrap;
-	}
 </style>
 <title>Analiza Steam - Windows</title>
 </head>
@@ -35,6 +31,7 @@
 		<a href="#localconfig">Local config</a>
 		<a href="#friends">Friends</a>
 		<a href="#games">Games</a>
+		<a href="#cachedimages">Cached Images</a>
 	</div>
 	<hr>
 	<br>
@@ -106,9 +103,9 @@
 		{% endif %}
 		<table>
 			<tr>
-				<th class=".colFitContents">GameID</th>
-				<th class=".colFitContents">Last played</th>
-				<th class=".colFitContents">Playtime</th>
+				<th>GameID</th>
+				<th>Last played</th>
+				<th>Playtime</th>
 			</tr>
 			{% for y in games[x] %}
 			<tr>
@@ -119,6 +116,13 @@
 			{% endfor %}
 		</table>
 		<hr>
+		{% endfor %}
+	</div>
+	
+	<div id="cachedimages">
+		<h1>Cached Images</h1>
+		{% for i in cachedimages %}
+		<img src="{{ i }}"/>
 		{% endfor %}
 	</div>
 
