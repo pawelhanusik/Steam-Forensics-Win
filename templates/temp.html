@@ -21,6 +21,10 @@
 	tr:nth-child(even) {
 	  background-color: #dddddd;
 	}
+	
+	#cachedimages_container {
+		display: none;
+	}
 </style>
 <title>Analiza Steam - Windows</title>
 </head>
@@ -121,11 +125,26 @@
 	
 	<div id="cachedimages">
 		<h1>Cached Images</h1>
-		{% for i in cachedimages %}
-		<img src="{{ i }}"/>
-		{% endfor %}
+		<button id="cachedimages_toggle" onclick="onCacheImagesToggleClick()">show</button>
+		<div id="cachedimages_container">
+			{% for i in cachedimages %}
+			<img src="{{ i }}"/>
+			{% endfor %}
+		</div>
 	</div>
 
-	
+	<script>
+		const cachedimages_container = document.getElementById('cachedimages_container');
+		const cachedimages_toggle = document.getElementById('cachedimages_toggle');
+		function onCacheImagesToggleClick(){
+			if(cachedimages_toggle.innerText == 'hide'){
+				cachedimages_toggle.innerText = 'show';
+				cachedimages_container.style.display = 'none';
+			}else{
+				cachedimages_toggle.innerText = 'hide';
+				cachedimages_container.style.display = 'block';
+			}
+		}
+	</script>
 </body>
 </html>
