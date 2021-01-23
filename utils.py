@@ -1,8 +1,8 @@
 import os, sys
 import urllib.request
 
-default_install_path = "C:/Program Files (x86)/Steam"
-default_appdata_path = os.getenv('LOCALAPPDATA') + "/Steam/"
+install_path = "C:/Program Files (x86)/Steam"
+appdata_path = os.getenv('LOCALAPPDATA') + "/Steam/"
 
 use_default_install = None
 use_default_appdata = None
@@ -14,25 +14,30 @@ userNamesCache = {}
 
 def getInstallPath():
     global use_default_install
+    global install_path
+
     if use_default_install == None:
         try:
             use_default_install = input(f'Use default Steam install path? ({default_install_path}) [Y/n] (default: Y): ')
         except KeyboardInterrupt:
             exit()
-    if len(use_default_install) > 0 and ( use_default_install[0] == 'n' or use_default_install[0] == 'N' ):
-        return input('Input Steam install path: ')
-    return default_install_path
+        if len(use_default_install) > 0 and ( use_default_install[0] == 'n' or use_default_install[0] == 'N' ):
+            install_path = input('Input Steam install path: ')
+    
+    return install_path
 
 def getAppdataPath():
     global use_default_appdata
+    global appdata_path
+
     if use_default_appdata == None:
         try:
             use_default_appdata = input(f'Use default Steam appdata path? ({default_appdata_path}) [Y/n] (default: Y): ')
         except KeyboardInterrupt:
             exit()
-    if len(use_default_appdata) > 0 and ( use_default_appdata[0] == 'n' or use_default_appdata[0] == 'N' ):
-        return input('Input Steam appdata path: ')
-    return default_appdata_path
+        if len(use_default_appdata) > 0 and ( use_default_appdata[0] == 'n' or use_default_appdata[0] == 'N' ):
+            appdata_path = input('Input Steam appdata path: ')
+    return appdata_path
 
 def fetchGameName(gameID):
     global fetch_game_names
@@ -40,13 +45,13 @@ def fetchGameName(gameID):
 
     if fetch_game_names == None:
         try:
-            tmp_fetchGameNames = input('Fetch game names from the internet? [y/N] (default: no) ')
+            tmp_fetchGameNames = input('Fetch game names from the internet? [Y/n] (default: yes) ')
         except KeyboardInterrupt:
             exit()
-        if tmp_fetchGameNames == 'y' or tmp_fetchGameNames == 'Y':
-            fetch_game_names = True
-        else:
+        if len(tmp_fetchGameNames) > 0 and (tmp_fetchGameNames[0] == 'n' or tmp_fetchGameNames[0] == 'N'):
             fetch_game_names = False
+        else:
+            fetch_game_names = True
     
     if fetch_game_names == False:
         return None
@@ -82,13 +87,13 @@ def fetchUserName(userID):
 
     if fetch_user_names == None:
         try:
-            tmp_fetchUserNames = input('Fetch game names from the internet? [y/N] (default: no) ')
+            tmp_fetchUserNames = input('Fetch user names from the internet? [Y/n] (default: yes) ')
         except KeyboardInterrupt:
             exit()
-        if tmp_fetchUserNames == 'y' or tmp_fetchUserNames == 'Y':
-            fetch_user_names = True
-        else:
+        if len(tmp_fetchUserNames) > 0 and (tmp_fetchUserNames[0] == 'n' or tmp_fetchUserNames[0] == 'N'):
             fetch_user_names = False
+        else:
+            fetch_user_names = True
     
     if fetch_user_names == False:
         return None

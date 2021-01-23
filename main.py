@@ -4,6 +4,24 @@ from jinja2 import Template, Environment, FileSystemLoader
 import utils
 import useraccounts, localconfig, friends, games, cachedimages, achievements, timeplayed
 
+def printHelp():
+    print(f'Usage:\n\tpython {sys.argv[0]} [options]')
+    print(f'Options:')
+    print('\t{:20}\t{}'.format('-h, --help', 'show help'))
+    print('\t{:20}\t{}'.format('-y', 'answer yes to all questions (except ones about paths)'))
+    print('\t{:20}\t{}'.format('-d, --default-path', 'do not ask for paths, use defaults instead'))
+
+if '-h' in sys.argv or '--help' in sys.argv or 'help' in sys.argv:
+    printHelp()
+    exit()
+if '-y' in sys.argv:
+    utils.fetch_game_names = True
+    utils.fetch_user_names = True
+if '-d' in sys.argv or '--default-path' in sys.argv:
+    utils.use_default_install = 'y'
+    utils.use_default_appdata = 'y'
+
+
 #Ask, so user won't be asked later
 utils.getInstallPath()
 utils.getAppdataPath()
