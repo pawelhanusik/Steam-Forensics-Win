@@ -3,9 +3,6 @@
 <head>
 <meta charset="utf-8">
 <style>
-	#menu {
-		
-	}
 	#menu * {
 		display: block;
 	}
@@ -35,6 +32,8 @@
 		<a href="#localconfig">Local config</a>
 		<a href="#friends">Friends</a>
 		<a href="#games">Games</a>
+		<a href="#achievements">Achievements</a>
+		<a href="#timeplayed">Time played</a>
 		<a href="#cachedimages">Cached Images</a>
 	</div>
 	<hr>
@@ -122,7 +121,75 @@
 		<hr>
 		{% endfor %}
 	</div>
+
+	<div id="achievements">
+		{% for uid in achievements %}
+		{% if achievements|length > 1 %}
+		<h1>Achievements of {{ uid }}</h1>
+		{% else %}
+		<h1>Achievements</h1>
+		{% endif %}
+		
+		{% for gameid in achievements[uid] %}
+			{% if achievements[uid][gameid]|length > 0 %}
+			<h2>{{ gameid }}</h2>
+			<table>
+				<tr>
+					<th>id</th>
+					<th>name</th>
+					<th>description</th>
+					<th>image</th>
+					<th>achieved</th>
+					<th>unlocked</th>
+				</tr>
+				
+				{% for x in achievements[uid][gameid] %}
+					<tr>
+						<td>{{ x['strID'] }}</td>
+						<td>{{ x['strName'] }}</td>
+						<td>{{ x['strDescription'] }}</td>
+						<td><img src="{{ x['strImage'] }}" alt="{{ x['strImage'] }}"></td>
+						<td>{{ x['bAchieved'] }}</td>
+						<td>{{ x['rtUnlocked'] }}</td>
+					</tr>
+				{% endfor %}
+			</table>
+			{% endif %}
+		{% endfor %}
+		<hr>
+		{% endfor %}
+	</div>
 	
+	<div id="timeplayed">
+		{% for uid in timeplayed %}
+		{% if timeplayed|length > 1 %}
+		<h1>Time played of {{ uid }}</h1>
+		{% else %}
+		<h1>Time played</h1>
+		{% endif %}
+		
+		{% for gameid in timeplayed[uid] %}
+			{% if timeplayed[uid][gameid]|length > 0 %}
+			<h2>{{ gameid }}</h2>
+			<table>
+				<tr>
+					<th>steamid</th>
+					<th>time</th>
+				</tr>
+				
+				{% for x in timeplayed[uid][gameid] %}
+					<tr>
+						<td>{{ x['steamid'] }}</td>
+						<td>{{ x['minutes_played_forever'] }}</td>
+					</tr>
+				{% endfor %}
+			</table>
+			{% endif %}
+		{% endfor %}
+		<hr>
+		{% endfor %}
+	</div>
+
 	<div id="cachedimages">
 		<h1>Cached Images</h1>
 		<button id="cachedimages_toggle" onclick="onCacheImagesToggleClick()">show</button>

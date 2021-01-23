@@ -5,20 +5,9 @@ import urllib.request
 import utils,vdf
 
 def run():
-    fetchGameNames = False
-
     ret = {}
     userdata_path = utils.getInstallPath() + '/userdata'
     uids = os.listdir(userdata_path)
-    
-    #Ask
-    try:
-        tmp_fetchGameNames = input('Fetch game names from the internet? [y/N] (default: no) ')
-    except KeyboardInterrupt:
-        exit()
-    if tmp_fetchGameNames == 'y' or tmp_fetchGameNames == 'Y':
-        fetchGameNames = True
-    #End asking
 
     first = True
     for uid in uids:
@@ -32,7 +21,6 @@ def run():
 
         alldata = vdf.parse(filepath)
         alldata = alldata['UserLocalConfigStore']['Software']['Valve']['Steam']['Apps']
-        i = 0
         for gameID in alldata:
             if gameID == '':
                 continue
@@ -47,17 +35,9 @@ def run():
             if 'Playtime' in data[gameID]:
                 playtime = int(data[gameID]['Playtime'])
                 data[gameID]['Playtime'] += ' ( {0}h {1}m )'.format(playtime//60, playtime%60)
-            if fetchGameNames and 'GameID' in data[gameID]:
-                print('Fetching game names from the internet {}/{}'.format(i, len(alldata)), file=sys.stderr, end="\r")
-                i += 1
-                with urllib.request.urlopen(f'https://store.steampowered.com/app/{gameID}/') as response:
-                    html = response.read()
-                    html = html.decode('utf-8')
-                    a = html.find('<title>') + 7
-                    b = html.find('</title>')
-                    title = html[a:b]
-                    if title.find(' on Steam') == len(title) - 9:
-                        title = title[:-9]
+            if 'GameID' in data[gameID]:
+                title = utils.fetchGameName(gameID)
+                if title != None:
                     data[gameID]['GameID'] += f' ( {title} )'
                     
             #===
