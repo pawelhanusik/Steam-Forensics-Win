@@ -3,14 +3,19 @@ import base64
 
 import utils
 
+export_dir = None
+
 def run():
+    global export_dir
+
     cachedir = utils.getAppdataPath() + '/htmlcache/Cache/'
     files = os.listdir(cachedir)
     
-    try:
-        export_dir = input("Please specify images export dir name (leave empty to embed images into html): ")
-    except KeyboardInterrupt:
-        exit()
+    if export_dir == None:
+        try:
+            export_dir = input("Please specify images export dir name (leave empty to embed images into html): ")
+        except KeyboardInterrupt:
+            exit()
     if len(export_dir) > 0:
         if os.path.exists(export_dir):
             try:

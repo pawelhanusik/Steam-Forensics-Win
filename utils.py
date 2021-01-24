@@ -1,5 +1,6 @@
 import os, sys
 import urllib.request
+import socket
 
 install_path = "C:/Program Files (x86)/Steam"
 appdata_path = os.getenv('LOCALAPPDATA') + "/Steam/"
@@ -18,7 +19,7 @@ def getInstallPath():
 
     if use_default_install == None:
         try:
-            use_default_install = input(f'Use default Steam install path? ({default_install_path}) [Y/n] (default: Y): ')
+            use_default_install = input(f'Use default Steam install path? ({install_path}) [Y/n] (default: Y): ')
         except KeyboardInterrupt:
             exit()
         if len(use_default_install) > 0 and ( use_default_install[0] == 'n' or use_default_install[0] == 'N' ):
@@ -32,7 +33,7 @@ def getAppdataPath():
 
     if use_default_appdata == None:
         try:
-            use_default_appdata = input(f'Use default Steam appdata path? ({default_appdata_path}) [Y/n] (default: Y): ')
+            use_default_appdata = input(f'Use default Steam appdata path? ({appdata_path}) [Y/n] (default: Y): ')
         except KeyboardInterrupt:
             exit()
         if len(use_default_appdata) > 0 and ( use_default_appdata[0] == 'n' or use_default_appdata[0] == 'N' ):
@@ -61,22 +62,36 @@ def fetchGameName(gameID):
     
     title = None
     
-    print(f'Fetching game name of {gameID} from the internet...', file=sys.stderr, end="\r")
+    info2print = f'Fetching game name of {gameID} from the internet...'
+    print(info2print, file=sys.stderr, end="\r")
     try:
-        with urllib.request.urlopen(f'https://store.steampowered.com/app/{gameID}/') as response:
-            html = response.read()
-            html = html.decode('utf-8')
-            a = html.find('<title>') + 7
-            b = html.find('</title>')
-            title = html[a:b]
-            if title.find(' on Steam') == len(title) - 9:
-                title = title[:-9]
+        timeouts = [15, 20, 40]
+        for i in range(0, 3):
+            try:
+                with urllib.request.urlopen(f'https://store.steampowered.com/app/{gameID}/', timeout=timeouts[i]) as response:
+                    html = response.read()
+                    html = html.decode('utf-8')
+                    #a = html.find('<title>') + 7
+                    #b = html.find('</title>')
+                    a = html.find('<div class="apphub_AppName">')
+                    if a == -1:
+                        break
+                    a += 28
+                    b = html.find('</div>', a)
+                    title = html[a:b]
+                    #if title.find(' on Steam') == len(title) - 9:
+                    #    title = title[:-9]
+                    break
+            except socket.timeout:
+                pass
     except KeyboardInterrupt:
         print('', file=sys.stderr)
         print('Aborted', file=sys.stderr)
         tmp_cont = input('Continue running? [Y/n] (default: y): ')
         if len(tmp_cont) > 0 and (tmp_cont[0] == 'n' or tmp_cont[0] == 'N'):
             exit()
+    print(' '*len(info2print), end='\r')
+    
     if title != None:
         gameNamesCache[gameID] = title
     return title
@@ -103,20 +118,25 @@ def fetchUserName(userID):
     
     username = None
     
-    print(f'Fetching username of {userID} from the internet...', file=sys.stderr, end="\r")
+    info2print = f'Fetching username of {userID} from the internet...'
+    print(info2print, file=sys.stderr, end="\r")
     try:
         with urllib.request.urlopen(f'https://steamcommunity.com/profiles/{userID}/') as response:
             html = response.read()
             html = html.decode('utf-8')
-            a = html.find('<span class="actual_persona_name">') + 34
-            b = html.find('</span>', a)
-            username = html[a:b]
+            a = html.find('<span class="actual_persona_name">')
+            if a != -1:                
+                a += 34
+                b = html.find('</span>', a)
+                username = html[a:b]
     except KeyboardInterrupt:
         print('', file=sys.stderr)
         print('Aborted', file=sys.stderr)
         tmp_cont = input('Continue running? [Y/n] (default: y): ')
         if len(tmp_cont) > 0 and (tmp_cont[0] == 'n' or tmp_cont[0] == 'N'):
             exit()
+    print(' '*len(info2print), end='\r')
+    
     if username != None:
         userNamesCache[userID] = username
     return username
